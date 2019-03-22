@@ -1,0 +1,52 @@
+# 01-web-demo-versions.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  ports:
+  - port: 5005
+    name: http
+  selector:
+    app: web
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: web-v1
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web
+        version: v1
+    spec:
+      containers:
+      - name: web
+        image: jweissig/istio-demo:v0.1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5005
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: web-v2
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web
+        version: v2
+    spec:
+      containers:
+      - name: web
+        image: jweissig/istio-demo:v0.2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5005
+---

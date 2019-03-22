@@ -1,0 +1,38 @@
+# 04-web-demo-5-95.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: web
+spec:
+  host: web
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: web
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - web-gateway
+  http:
+  - route:
+    - destination:
+        host: web
+        port:
+          number: 5005
+        subset: v1
+      weight: 5
+    - destination:
+        host: web
+        port:
+          number: 5005
+        subset: v2
+      weight: 95
